@@ -70,6 +70,10 @@ class TiendaApplicationTests {
 	@Test
 	void test2() {
 		var listProds = prodRepo.findAll();
+
+		var listPrecios = listProds.stream()
+						.map(p -> p.getPrecio() * 1.08)
+						.toList();
 		//TODO
 	}
 	
