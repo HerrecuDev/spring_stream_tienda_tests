@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 
@@ -70,10 +73,19 @@ class TiendaApplicationTests {
 	@Test
 	void test2() {
 		var listProds = prodRepo.findAll();
-
-		var listPrecios = listProds.stream()
-						.map(p -> p.getPrecio() * 1.08)
-						.toList();
+		//EL var lisPrecios = List<String> listPrecios.
+			listProds.stream()
+									// .map(p -> p.getPrecio() * 1.08) //double con precision double
+									// .map(prec -> BigDecimal.valueOf(prec).setScale(2, RoundingMode.HALF_UP))//BigDecimal con 2 decimales
+									// .map(prec -> prec + "$") // String
+									.map(p -> p.getNOmbre()
+									+ "con precio : " 
+									+ BigDecimal.valueOf(p.getPrecio() * 1.08)
+												.setScale(2, RoundingMode.HALF_UP)
+									+ ("$")
+									+ .toList();
+			//Imprimimos el Streams :
+			listPrecios.forEach(s -> System.out.println(s));
 		//TODO
 	}
 	
@@ -83,7 +95,11 @@ class TiendaApplicationTests {
 	@Test
 	void test3() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+		listProds.stream() //Producto
+				.map(p -> p.getNombre().toUpperCase() + "precio " + p.getPrecio()) //String
+				.toList();
+		
 	}
 	
 	/**
