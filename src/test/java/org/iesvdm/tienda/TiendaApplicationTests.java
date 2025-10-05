@@ -84,7 +84,7 @@ class TiendaApplicationTests {
 			//Imprimimos el Streams :
 			listPrecios.forEach(s -> System.out.println(s));
 
-
+		
 	}
 	
 	/**
