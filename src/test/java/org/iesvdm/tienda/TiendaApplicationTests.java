@@ -109,6 +109,11 @@ class TiendaApplicationTests {
         listFabs.stream()
                 .map(p -> p.getProductos())
                 .toList();
+
+
+
+
+
 	}
 	
 	/**
