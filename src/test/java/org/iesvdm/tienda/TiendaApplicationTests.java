@@ -99,6 +99,7 @@ class TiendaApplicationTests {
 		listProds.stream() //Producto
 				.map(p -> p.getNombre().toUpperCase() + "precio " + p.getPrecio()) //String
 				.toList();
+
 		
 	}
 	
