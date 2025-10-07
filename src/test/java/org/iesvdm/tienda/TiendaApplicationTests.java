@@ -74,17 +74,17 @@ class TiendaApplicationTests {
 	void test2() {
 		var listProds = prodRepo.findAll();
 		//EL var lisPrecios = List<String> listPrecios.
-			listProds.stream()
+			var listPrecios = listProds.stream()
 									// .map(p -> p.getPrecio() * 1.08) //double con precision double
 									// .map(prec -> BigDecimal.valueOf(prec).setScale(2, RoundingMode.HALF_UP))//BigDecimal con 2 decimales
 									// .map(prec -> prec + "$") // String
-									.map(p -> p.getNOmbre()
+									.map(p -> p.getNombre()
 									+ "con precio : " 
 									+ BigDecimal.valueOf(p.getPrecio() * 1.08)
 												.setScale(2, RoundingMode.HALF_UP)
-									+ ("$")
-									+ .toList();
-			//Imprimimos el Streams :
+									+ "$")
+									.toList();
+												//Imprimimos el Streams :
 			listPrecios.forEach(s -> System.out.println(s));
 		//TODO
 	}
@@ -108,7 +108,10 @@ class TiendaApplicationTests {
 	@Test
 	void test4() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+        listFabs.stream()
+                .map(p -> p.getProductos())
+                .toList();
 	}
 	
 	/**
