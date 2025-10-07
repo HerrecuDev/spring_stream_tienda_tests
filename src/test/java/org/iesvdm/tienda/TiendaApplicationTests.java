@@ -75,9 +75,6 @@ class TiendaApplicationTests {
 		var listProds = prodRepo.findAll();
 		//EL var lisPrecios = List<String> listPrecios.
 			var listPrecios = listProds.stream()
-									// .map(p -> p.getPrecio() * 1.08) //double con precision double
-									// .map(prec -> BigDecimal.valueOf(prec).setScale(2, RoundingMode.HALF_UP))//BigDecimal con 2 decimales
-									// .map(prec -> prec + "$") // String
 									.map(p -> p.getNombre()
 									+ "con precio : " 
 									+ BigDecimal.valueOf(p.getPrecio() * 1.08)
@@ -99,7 +96,6 @@ class TiendaApplicationTests {
 		listProds.stream() //Producto
 				.map(p -> p.getNombre().toUpperCase() + "precio " + p.getPrecio()) //String
 				.toList();
-
 		
 	}
 	
