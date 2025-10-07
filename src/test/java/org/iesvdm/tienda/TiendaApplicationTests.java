@@ -223,7 +223,7 @@ class TiendaApplicationTests {
 
         var producto_Barato = listProds.stream()
                 .sorted(comparing((Producto p)-> p.getPrecio()))
-                .map(producto -> producto.getNombre() + " " + producto.getPrecio())
+                .map(producto -> producto.getNombre() + " con precio : " + producto.getPrecio())
                 .limit(1)
                 .toList();
 
@@ -241,7 +241,7 @@ class TiendaApplicationTests {
 
         var producto_mas_Caro = listProds.stream()
                 .sorted(comparing((Producto p)-> p.getPrecio() , reverseOrder()))
-                .map(producto -> producto.getNombre() + " " + producto.getPrecio())
+                .map(producto -> producto.getNombre() + " con precio :" + producto.getPrecio())
                 .limit(1)
                 .toList();
 
