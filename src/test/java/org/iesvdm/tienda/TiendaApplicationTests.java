@@ -248,6 +248,8 @@ class TiendaApplicationTests {
 
         producto_mas_Caro.forEach(x -> System.out.println(x));
         Assertions.assertEquals(1, producto_mas_Caro.size());
+
+
 	}
 	
 	/**
