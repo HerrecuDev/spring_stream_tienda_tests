@@ -1,6 +1,7 @@
 package org.iesvdm.tienda;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.iesvdm.tienda.modelo.Fabricante;
 import org.iesvdm.tienda.modelo.Producto;
 import org.iesvdm.tienda.repository.FabricanteRepository;
@@ -12,9 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
 
+
+@Slf4j
 @SpringBootTest
 class TiendaApplicationTests {
 
@@ -107,8 +113,14 @@ class TiendaApplicationTests {
 		var listFabs = fabRepo.findAll();
 
         listFabs.stream()
-                .map(p -> p.getProductos())
+                .map(f -> f.getProductos() + " " + f.getNombre()
+                        .substring(0,2)
+                        .toUpperCase())
+
+
                 .toList();
+
+        listFabs.forEach(System.out::println);
 
 
 	}
@@ -119,7 +131,14 @@ class TiendaApplicationTests {
 	@Test
 	void test5() {
 		var listFabs = fabRepo.findAll();
-		//TODO		
+
+           List<Integer> listCode =  listFabs.stream()
+                    .filter(fabricante -> fabricante.getProductos() != null
+                    && !fabricante.getProductos().isEmpty())
+                    .map( c -> c.getCodigo())
+                    .toList();
+
+           listCode.forEach(c-> System.out.println(c));
 	}
 	
 	/**
@@ -128,7 +147,16 @@ class TiendaApplicationTests {
 	@Test
 	void test6() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+        var listOrdenadas = listFabs.stream()
+                .sorted(comparing((Fabricante f) -> f.getNombre(), reverseOrder() ))
+                .map(f -> f.getNombre())
+                .toList();
+
+        listOrdenadas.forEach(x -> System.out.println(x));
+
+
+        Assertions.assertEquals(11 , listOrdenadas.size());
 	}
 	
 	/**
@@ -137,7 +165,17 @@ class TiendaApplicationTests {
 	@Test
 	void test7() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var listaAscendente = listProds.stream()
+                .sorted(comparing((Producto p)-> p.getNombre() )
+
+                        .thenComparing((Producto p)->p.getPrecio(), reverseOrder()))
+                        .map(p -> p.getNombre() + " " + p.getPrecio())
+                        .toList();
+
+        listaAscendente.forEach(x -> System.out.println(x));
+
+        Assertions.assertEquals(11, listaAscendente.size());
 	}
 	
 	/**
@@ -146,7 +184,16 @@ class TiendaApplicationTests {
 	@Test
 	void test8() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+        var lista5_primeros = listFabs.stream()
+
+                .limit(5)
+                .map(fabricante -> fabricante.getNombre())
+                .toList();
+
+
+        lista5_primeros.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(5, lista5_primeros.size());
 	}
 	
 	/**
@@ -155,7 +202,16 @@ class TiendaApplicationTests {
 	@Test
 	void test9() {
 		var listFabs = fabRepo.findAll();
-		//TODO		
+
+        var lista_2_Fabricantes = listFabs.stream()
+                .skip(3)
+                .limit(2)
+                .map(f -> f.getNombre())
+                .toList();
+
+        lista_2_Fabricantes.forEach( x -> System.out.println(x));
+        Assertions.assertEquals(2, lista_2_Fabricantes.size());
+
 	}
 	
 	/**
@@ -164,7 +220,16 @@ class TiendaApplicationTests {
 	@Test
 	void test10() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var producto_Barato = listProds.stream()
+                .sorted(comparing((Producto p)-> p.getPrecio()))
+                .map(producto -> producto.getNombre() + " " + producto.getPrecio())
+                .limit(1)
+                .toList();
+
+        producto_Barato.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(1,producto_Barato.size());
+
 	}
 	
 	/**
@@ -173,7 +238,16 @@ class TiendaApplicationTests {
 	@Test
 	void test11() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var producto_mas_Caro = listProds.stream()
+                .sorted(comparing((Producto p)-> p.getPrecio() , reverseOrder()))
+                .map(producto -> producto.getNombre() + " " + producto.getPrecio())
+                .limit(1)
+                .toList();
+
+
+        producto_mas_Caro.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(1, producto_mas_Caro.size());
 	}
 	
 	/**

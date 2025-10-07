@@ -1,15 +1,25 @@
 -- 1. Lista los nombres y los precios de todos los productos de la tabla producto
 
-    select nombre , producto from tienda
+    SELECT nombre , producto from tienda;
 -- 2. Devuelve una lista de Producto completa con el precio de euros convertido a dólares .
 -- 3. Lista los nombres y los precios de todos los productos, convirtiendo los nombres a mayúscula.
 -- 4. Lista el nombre de todos los fabricantes y a continuación en mayúsculas los dos primeros caracteres del nombre del fabricante.
+    SELECT  nombre , UPPER(SUBSTR(nombre , 1 ,2)) FROM fabricante;
 -- 5. Lista el código de los fabricantes que tienen productos.
+    SELECT DISTINCT f.codigo from fabricante f inner join producto p on f.codigo = p.codigo_fabricante;
+
 -- 6. Lista los nombres de los fabricantes ordenados de forma descendente.
+    SELECT  f.nombre FROM fabricante f order by f.nombre desc;
 -- 7. Lista los nombres de los productos ordenados en primer lugar por el nombre de forma ascendente y en segundo lugar por el precio de forma descendente.
+
 -- 8. Devuelve una lista con los 5 primeros fabricantes.
--- 9. Devuelve una lista con 2 fabricantes a partir del cuarto fabricante. El cuarto fabricante también se debe incluir en la respuesta.
+    SELECT nombre FROM  fabricante limit 5;
+-- 9. Devuelve una lista con 2 fabricantes a partir del cuarto fabricante. El cuarto fabricante también se debe incluir en la respuesta
+    SELECT nombre FROM fabricante limit 3, 2;
 -- 10. Lista el nombre y el precio del producto más barato
+
+    SELECT p.nombre FROM producto p order by p.precio asc limit 1;
+
 -- 11. Lista el nombre y el precio del producto más caro
 -- 12. Lista el nombre de todos los productos del fabricante cuyo código de fabricante es igual a 2.
 -- 13. Lista el nombre de los productos que tienen un precio menor o igual a 120€.
