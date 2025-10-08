@@ -17,7 +17,7 @@
     SELECT nombre FROM  fabricante limit 5;
 -- 9. Devuelve una lista con 2 fabricantes a partir del cuarto fabricante. El cuarto fabricante también se debe incluir en la respuesta
     SELECT nombre FROM fabricante limit 3, 2;
--- 10. Lista el nombre y el precio del producto más barato
+-- 10. Lista el nombre y el precio del producto más baratos
     SELECT p.nombre FROM producto p order by p.precio asc limit 1;
 -- 11. Lista el nombre y el precio del producto más caro
     SELECT p.nombre FROM producto p order by p.precio desc limit 1;
