@@ -43,8 +43,11 @@
 -- Con el LOWER distingue entre mayuscular y minusculas :
     SELECT nombre FROM producto WHERE LOWER(nombre) LIKE '%portatil%';
 -- 21. Devuelve una lista con el nombre de todos los productos que contienen la cadena Monitor en el nombre y tienen un precio inferior a 215 €.
+    SELECT nombre FROM producto WHERE LOWER(nombre) LIKE '%Monitor%' AND precio <= 215;
 -- 22. Lista el nombre y el precio de todos los productos que tengan un precio mayor o igual a 180€. Ordene el resultado en primer lugar por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente).
+    SELECT nombre , precio from producto WHERE precio >= 180 order by precio desc , nombre asc;
 -- 23. Devuelve una lista con el nombre del producto, precio y nombre de fabricante de todos los productos de la base de datos. Ordene el resultado por el nombre del fabricante, por orden alfabético.
+    -- INSERT INTO tabla_Generica(nombre) SELECT p.nombre , p.precio  FROM producto p UNION SELECT nombre FROM fabricante f order by nombre asc;
 -- 24. Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más caro.
 -- 25. Devuelve una lista de todos los productos del fabricante Crucial que tengan un precio mayor que 200€.
 -- 26. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packard y Seagate.
