@@ -435,15 +435,35 @@ class TiendaApplicationTests {
 	void test21() {
 		var listProds = prodRepo.findAll();
 
+            var listaMonitores = listProds.stream()
+                    .filter(p-> p.getNombre().contains("Monitor") && p.getPrecio() <= 215)
+                    .map(p->p.getNombre() + " Contiene la palabra Monitor y su precio es INFERIOR a 215€ " + p.getPrecio())
+                    .toList();
+
+            listaMonitores.forEach(x -> System.out.println(x));
+
+            Assertions.assertEquals(1, listaMonitores.size());
+
 	}
 
 	/**
 	 * 22. Lista el nombre y el precio de todos los productos que tengan un precio mayor o igual a 180€.
 	 * Ordene el resultado en primer lugar por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente).
 	 */
+    @Test
 	void test22() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var listoProductos = listProds.stream()
+                    .sorted(comparing((Producto p)-> p.getPrecio() , reverseOrder()))
+                    .sorted(comparing((Producto p)-> p.getNombre()))
+                    .filter(p -> p.getPrecio() >= 180)
+                    .map(p-> p.getNombre() + " tiene un precio de " + p.getPrecio())
+                    .toList();
+
+            listoProductos.forEach(x -> System.out.println(x));
+            Assertions.assertEquals(7 , listoProductos.size());
+
 	}
 
 	/**
@@ -453,7 +473,7 @@ class TiendaApplicationTests {
 	@Test
 	void test23() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
 	}
 
 	/**
@@ -665,8 +685,9 @@ Fabricante: Xiaomi
 
         listProds.stream()
                 .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
-                .map(producto -> new Double[]{(double)0, (double) 0,(double)0,null})
-                .reduce(new Object[]{0.0 /*min*/ ,0.0 /*miax*/,0.0 /*sum*/,0.0/*con*/, null} , (a , b) ->{
+                .map(producto -> new Double[]{(double)0, (double) 0,(double)0})
+                //Esta mal :
+                .reduce((Double[]) new Object[]{0.0 /*min*/ ,0.0 /*miax*/,0.0 /*sum*/,0.0/*con*/ }, (a , b) ->{
                     double minAct = 0.0;
                     double maxACt = 0.0;
                     double sumAct = 0.0;
@@ -695,10 +716,11 @@ Fabricante: Xiaomi
                     double countAnt = (Double)a[3];
                     countAct = countAnt + 1;
 
-                    //return new double[]{minAct,maxACt,sumAct,countAnt};
+                    return new Double[]{minAct,maxACt,sumAct,countAnt};
 
 
-        });
+
+                });
 	}
 
 	/**
