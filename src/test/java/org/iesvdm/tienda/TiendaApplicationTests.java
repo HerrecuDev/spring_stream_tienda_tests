@@ -665,7 +665,7 @@ Fabricante: Xiaomi
 
         listProds.stream()
                 .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
-                .map(producto -> new Object[]{null,null,null,producto})
+                .map(producto -> new Double[]{(double)0, (double) 0,(double)0,null})
                 .reduce(new Object[]{0.0 /*min*/ ,0.0 /*miax*/,0.0 /*sum*/,0.0/*con*/, null} , (a , b) ->{
                     double minAct = 0.0;
                     double maxACt = 0.0;
@@ -695,7 +695,7 @@ Fabricante: Xiaomi
                     double countAnt = (Double)a[3];
                     countAct = countAnt + 1;
 
-                    return new double[]{minAct,maxACt,sumAct,countAnt};
+                    //return new double[]{minAct,maxACt,sumAct,countAnt};
 
 
         });
