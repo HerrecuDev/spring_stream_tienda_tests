@@ -2,6 +2,7 @@ package org.iesvdm.tienda;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.ast.SqlTreeCreationException;
 import org.iesvdm.tienda.modelo.Fabricante;
 import org.iesvdm.tienda.modelo.Producto;
 import org.iesvdm.tienda.repository.FabricanteRepository;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
@@ -422,6 +425,7 @@ class TiendaApplicationTests {
                 .toList();
 
         listaPortatiles.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(2, listaPortatiles.size());
 	}
 
 	/**
@@ -584,7 +588,18 @@ Fabricante: Xiaomi
 	@Test
 	void test31() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var numeroFabricantesconProd = listProds.stream()
+
+                .map(producto -> producto.getFabricante().getCodigo())
+                .distinct()
+                .count();
+
+        System.out.println("El número de fabricantes con productos es " + numeroFabricantesconProd);
+
+        Assertions.assertEquals(7 , numeroFabricantesconProd );
+
+
 	}
 
 	/**
@@ -640,7 +655,50 @@ Fabricante: Xiaomi
 	@Test
 	void test37() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var sumaryStadistics = listProds.stream()
+                .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
+                .mapToDouble(p -> p.getPrecio())
+                .summaryStatistics();
+
+        System.out.println(sumaryStadistics);
+
+        listProds.stream()
+                .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
+                .map(producto -> new Object[]{null,null,null,producto})
+                .reduce(new Object[]{0.0 /*min*/ ,0.0 /*miax*/,0.0 /*sum*/,0.0/*con*/, null} , (a , b) ->{
+                    double minAct = 0.0;
+                    double maxACt = 0.0;
+                    double sumAct = 0.0;
+                    double countAct = 0.0;
+
+                    double minAnterior = (Double)a[0];
+                    if ((Double) b[0] < minAnterior){
+                        minAct = (Double)b[0];
+
+                    }else{
+                        minAct = minAnterior;
+                    }
+
+                    double maxAnterior = (Double)a[1];
+                    if ((Double)b[1]> maxAnterior){
+
+                        maxAnterior = (Double)b[1];
+
+                    }
+
+
+
+
+                    double sumAnterior = (Double) a[2];
+                    sumAct = sumAnterior + b[2];
+                    double countAnt = (Double)a[3];
+                    countAct = countAnt + 1;
+
+                    return new double[]{minAct,maxACt,sumAct,countAnt};
+
+
+        });
 	}
 
 	/**
@@ -748,6 +806,30 @@ Hewlett-Packard              2
 		var listFabs = fabRepo.findAll();
 		//TODO
 	}
+
+
+
+    @Test
+    void testReduce(){
+        int sumatotal = Stream.of(1,2,3,4)
+
+                .reduce(0 , (a,b) -> a+b);
+
+        System.out.println(sumatotal);
+
+    }
+
+    @Test
+    void testReduceWithFor(){
+        int sumatotal = IntStream.iterate(1 , i->i <100 ,  i -> i+2)
+
+                .peek(value -> System.out.println(value))
+
+                .reduce(0 , (a,b) -> a+b);
+
+        System.out.println(sumatotal);
+
+    }
 
 }
 
