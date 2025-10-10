@@ -1,6 +1,7 @@
 package org.iesvdm.tienda;
 
 
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.sql.ast.SqlTreeCreationException;
 import org.iesvdm.tienda.modelo.Fabricante;
@@ -31,8 +32,9 @@ class TiendaApplicationTests {
 
 	@Autowired
 	ProductoRepository prodRepo;
+    private HikariDataSource dataSource2;
 
-	@Test
+    @Test
 	void testAllFabricante() {
 		var listFabs = fabRepo.findAll();
 
@@ -474,6 +476,16 @@ class TiendaApplicationTests {
 	void test23() {
 		var listProds = prodRepo.findAll();
 
+        var listaFabOrdenadaAlfabeticamente = listProds.stream()
+
+                .sorted(Comparator.comparing((Producto p)-> p.getFabricante().getNombre() ,reverseOrder()))
+                .map(p-> p.getNombre() + " con precio = " + p.getPrecio() + " y fabricante = " + p.getFabricante().getNombre())
+                .toList();
+
+        listaFabOrdenadaAlfabeticamente.forEach(x -> System.out.println(x));
+
+        Assertions.assertEquals(11 , listaFabOrdenadaAlfabeticamente.size());
+
 	}
 
 	/**
@@ -482,7 +494,15 @@ class TiendaApplicationTests {
 	@Test
 	void test24() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var productoMascaro = listProds.stream()
+                    .sorted(comparing((Producto p)-> p.getPrecio() ,reverseOrder()))
+                    .limit(1)
+                    .map(p->p.getNombre() + " con el precio mas caro = " +  p.getPrecio() + " y nombre de Fabricante = " + p.getFabricante().getNombre())
+                    .toList();
+
+            productoMascaro.forEach(z -> System.out.println(z));
+            Assertions.assertEquals(1 , productoMascaro.size());
 	}
 
 	/**
@@ -491,7 +511,14 @@ class TiendaApplicationTests {
 	@Test
 	void test25() {
 		var listProds = prodRepo.findAll();
-		//TODO
+		    var listaFabCrucial = listProds.stream()
+                    .filter(p -> p.getFabricante().getNombre().equals("Crucial") && p.getPrecio() >= 200)
+                    .map(p -> p.getNombre() + " tiene un precio de " + p.getPrecio() + "€" + " y su fabricante es " + p.getFabricante().getNombre())
+                    .toList();
+
+
+            listaFabCrucial.forEach(z-> System.out.println(z));
+
 	}
 
 	/**
@@ -500,7 +527,17 @@ class TiendaApplicationTests {
 	@Test
 	void test26() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var listaProdSeleccionados = listProds.stream()
+                .filter(p -> p.getFabricante().getNombre().equals("Asus")
+                        || p.getFabricante().getNombre().equals("Hewlett-Packard")
+                        || p.getFabricante().getNombre().equals("Seagate")
+                )
+                .map(p -> p.getNombre() + " su fabricante es = " + p.getFabricante().getNombre())
+                .toList();
+
+        listaProdSeleccionados.forEach(z -> System.out.println(z));
+        Assertions.assertEquals(5 , listaProdSeleccionados.size());
 	}
 
 	/**
@@ -520,7 +557,19 @@ Monitor 27 LED Full HD |199.25190000000003|Asus
 	@Test
 	void test27() {
 		var listProds = prodRepo.findAll();
-		//TODO
+		    var listaCompletaentabla = listProds.stream()
+                    .sorted(Comparator
+                            .comparing((Producto p) -> p.getPrecio(), reverseOrder())
+                    .thenComparing(Producto:: getNombre))
+                    .filter(p -> p.getPrecio() >=180)
+
+                    .map(p-> p.getNombre() + " " + p.getPrecio())
+                    .toList();
+
+            listaCompletaentabla.forEach(z -> System.out.println(z));
+
+
+
 	}
 
 	/**
