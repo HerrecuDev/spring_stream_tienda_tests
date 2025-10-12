@@ -557,17 +557,49 @@ Monitor 27 LED Full HD |199.25190000000003|Asus
 	@Test
 	void test27() {
 		var listProds = prodRepo.findAll();
-		    var listaCompletaentabla = listProds.stream()
+		    var listaCompletaEntabla = listProds.stream()
+                    .filter(p -> p.getPrecio() >= 180)
                     .sorted(Comparator
-                            .comparing((Producto p) -> p.getPrecio(), reverseOrder())
-                    .thenComparing(Producto:: getNombre))
-                    .filter(p -> p.getPrecio() >=180)
+                            .comparing(Producto :: getPrecio).reversed()
+                            .thenComparing(Producto::getNombre))
 
-                    .map(p-> p.getNombre() + " " + p.getPrecio())
                     .toList();
 
-            listaCompletaentabla.forEach(z -> System.out.println(z));
+            //Para calcular las longitudes maximas de cada columna:
+            int maxNombre = listaCompletaEntabla.stream()
+                    .mapToInt(p -> p.getNombre().length())
+                    .max().orElse(10);
 
+            int maxPrecio = listaCompletaEntabla.stream()
+                    .mapToInt( p-> String .format(".2f", p.getPrecio()).length())
+                    .max().orElse(6);
+
+            int maxFabricante = listaCompletaEntabla.stream()
+                    .mapToInt(p -> p.getFabricante().getNombre().length())
+                    .max().orElse(10);
+
+            //Encabezado :
+
+            String header = String.format(
+                    "%-" + maxNombre + "s | %" + maxPrecio + "s | %" + maxFabricante + "s" ,
+                    "PRODUCTO" , "PRECIO (€)" , "FABRICANTE"
+            );
+
+        System.out.println(header);
+        System.out.println("-".repeat(header.length()));
+
+
+        //Ahora para realiar las Filas:
+        listaCompletaEntabla.forEach( p-> {
+            String fila =  String.format(
+                    "%-" +maxNombre + "s | %" + maxPrecio + ".2f | %-" + maxFabricante + "s" ,
+                    p.getNombre(),
+                    p.getPrecio(),
+                    p.getFabricante().getNombre()
+            );
+            System.out.println(fila);
+
+        });
 
 
 	}
