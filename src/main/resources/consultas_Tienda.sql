@@ -27,7 +27,6 @@
     SELECT nombre , precio FROM producto WHERE precio <= 120;
 
 -- 14. Lista los productos que tienen un precio mayor o igual a 400€.
-
     SELECT  * FROM producto WHERE precio >= 400;
 -- 15. Lista todos los productos que tengan un precio entre 80€ y 300€.
     SELECT  * FROM producto WHERE precio >=80 AND precio <=300;
@@ -47,10 +46,13 @@
 -- 22. Lista el nombre y el precio de todos los productos que tengan un precio mayor o igual a 180€. Ordene el resultado en primer lugar por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente).
     SELECT nombre , precio from producto WHERE precio >= 180 order by precio desc , nombre asc;
 -- 23. Devuelve una lista con el nombre del producto, precio y nombre de fabricante de todos los productos de la base de datos. Ordene el resultado por el nombre del fabricante, por orden alfabético.
-
+    SELECT p.nombre as nombre_producto , p.precio, f.nombre as nombre_fabricante FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo ORDER by f.nombre ASC;
 -- 24. Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más caro.
+    SELECT p.nombre as nombre_producto , p.precio, f.nombre as nombre_fabricante FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo ORDER BY p.precio DESC limit 1;
 -- 25. Devuelve una lista de todos los productos del fabricante Crucial que tengan un precio mayor que 200€.
+    SELECT p.nombre as nombre_producto , p.precio , f.nombre as nombre_fabricante  FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Crucial" AND p.precio >= 200;
 -- 26. Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packard y Seagate.
+    SELECT p.nombre as nombre_producto , f.nombre as nombre_fabricante FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre = "Asus" || f.nombre = "Hewlett-Packard" || f.nombre = "Seagate";
 -- 27. Devuelve un listado con el nombre de producto, precio y nombre de fabricante, de todos los productos que tengan un precio mayor o igual a 180€. Ordene el resultado en primer lugar por el precio (en orden descendente) y en segundo lugar por el nombre.
 -- 28. Devuelve un listado de los nombres fabricantes que existen en la base de datos, junto con los nombres productos que tiene cada uno de ellos. El listado deberá mostrar también aquellos fabricantes que no tienen productos asociados.
 -- 29. Devuelve un listado donde sólo aparezcan aquellos fabricantes que no tienen ningún producto asociado.
