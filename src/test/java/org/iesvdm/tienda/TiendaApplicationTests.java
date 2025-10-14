@@ -663,20 +663,41 @@ Fabricante: Xiaomi
 	@Test
 	void test28() {
 		var listFabs = fabRepo.findAll();
+        var listaProds = prodRepo.findAll();
+            listFabs.stream()
+                    .forEach(fabricante ->{
 
-            var listadoCompleto = listFabs.stream()
-                    .map(f -> f.getNombre() + f.getProductos())
-                    .toList();
+                        System.out.println("Fabricante : " + fabricante.getNombre());
+                        System.out.println("\n\t Productos :");
 
-        listadoCompleto.forEach( f-> {
+                        listaProds.stream()
+                                .filter(p-> p.getFabricante().getCodigo() == fabricante.getCodigo())
+                                .map(p-> "\t" + p.getNombre())
+                                .forEach(System.out::println);
+                        System.out.println();
+                        System.out.println("-----------------------------------------------------------------------------");
+
+                    });
 
 
+            //Formato 2 de hacerlo :
+        /*
+        var formato = listFabs.stream()
+                .map(fabricante -> {
 
-                }
+                    var productosFabricante = listaProds.stream()
+                            .filter(p -> p.getFabricante().getCodigo() == fabricante.getCodigo())
+                            .map(p -> p.getNombre())
+                            .toList();
 
+                    return "Fabricante : " + fabricante.getNombre() + " Productos : " + productosFabricante;
 
+                })
+                .toList();
 
-        );
+        formato.forEach(s -> System.out.println(s));
+        Assertions.assertEquals(9 , formato.size());
+            */
 	}
 
 	/**
@@ -685,7 +706,14 @@ Fabricante: Xiaomi
 	@Test
 	void test29() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+        var listaFabricantesSinProductos = listFabs.stream()
+                .filter(fabricante -> fabricante.getProductos().isEmpty())
+                .map(f -> "Fabricante : " + f.getNombre())
+                .toList();
+
+        listaFabricantesSinProductos.forEach(s-> System.out.println(s));
+        Assertions.assertEquals(2 , listaFabricantesSinProductos.size());
 	}
 
 	/**
@@ -694,7 +722,14 @@ Fabricante: Xiaomi
 	@Test
 	void test30() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var totalProdcutos = listProds.stream()
+                .map(p -> p.getNombre())
+                .count();
+
+        System.out.println("El numero total de productos que hay en la tabla productos es = " + totalProdcutos);
+        Assertions.assertEquals(11, totalProdcutos);
+
 	}
 
 
@@ -724,7 +759,16 @@ Fabricante: Xiaomi
 	@Test
 	void test32() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+        var mediaPrecios = listProds.stream()
+                .mapToDouble(p->p.getPrecio())
+                .average()
+                .orElse(0.0);
+
+        System.out.println("La media del precio de todos los productos es : " + mediaPrecios);
+
+
+
 	}
 
 	/**
@@ -900,7 +944,7 @@ Hewlett-Packard              2
 
             listaNombre.forEach( s -> System.out.println("Fabricante : " + s[0] + " Cantidad Producto = " + s[1] ));
 
-
+/*
             var listaNombre2 = listFabs.stream()
                     .flatMap(fabricante -> fabricante.getProductos().stream())
                     //.filter(producto -> producto.getPrecio() > 220)
@@ -927,7 +971,7 @@ Hewlett-Packard              2
                                     .count())
 
                     )
-                    .sorted(comparing())
+                    .sorted(comparing()) */
     }
 
 	/**
