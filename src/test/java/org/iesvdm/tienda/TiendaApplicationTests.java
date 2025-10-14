@@ -16,11 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
+import static java.util.stream.Collectors.*;
 
 
 @Slf4j
@@ -661,7 +663,20 @@ Fabricante: Xiaomi
 	@Test
 	void test28() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+            var listadoCompleto = listFabs.stream()
+                    .map(f -> f.getNombre() + f.getProductos())
+                    .toList();
+
+        listadoCompleto.forEach( f-> {
+
+
+
+                }
+
+
+
+        );
 	}
 
 	/**
@@ -766,15 +781,15 @@ Fabricante: Xiaomi
 
         listProds.stream()
                 .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
-                .map(producto -> new Double[]{(double)0, (double) 0,(double)0})
+                .map(producto -> new double[]{0, (double) 0,(double)0 , producto.getPrecio()})
                 //Esta mal :
-                .reduce((Double[]) new Object[]{0.0 /*min*/ ,0.0 /*miax*/,0.0 /*sum*/,0.0/*con*/ }, (a , b) ->{
+                .reduce(new double[]{0.0 /*min*/ ,0.0 /*max*/,0.0 /*sum*/,0.0/*con*/ }, (a , b) ->{
                     double minAct = 0.0;
                     double maxACt = 0.0;
                     double sumAct = 0.0;
                     double countAct = 0.0;
 
-                    double minAnterior = (Double)a[0];
+                    double minAnterior = a[0];
                     if ((Double) b[0] < minAnterior){
                         minAct = (Double)b[0];
 
@@ -797,7 +812,7 @@ Fabricante: Xiaomi
                     double countAnt = (Double)a[3];
                     countAct = countAnt + 1;
 
-                    return new Double[]{minAct,maxACt,sumAct,countAnt};
+                    return new double[]{minAct,maxACt,sumAct,countAnt};
 
 
 
@@ -867,8 +882,53 @@ Hewlett-Packard              2
 	@Test
 	void test42() {
 		var listFabs = fabRepo.findAll();
-		//TODO
-	}
+
+            var listaNombre = listFabs.stream()
+
+                    .map( f-> new Object[]{
+                            f.getNombre(),
+                            f.getProductos()
+                                    .stream()
+                                    .filter(p -> p.getPrecio() >= 200)
+                                    .count()
+
+
+
+                    })
+                    .sorted(comparing((a) ->(Long) a[1] , reverseOrder()))
+                    .toList();
+
+            listaNombre.forEach( s -> System.out.println("Fabricante : " + s[0] + " Cantidad Producto = " + s[1] ));
+
+
+            var listaNombre2 = listFabs.stream()
+                    .flatMap(fabricante -> fabricante.getProductos().stream())
+                    //.filter(producto -> producto.getPrecio() > 220)
+                    .collect(groupingBy(producto -> producto.getFabricante().getProductos() ,
+                            filtering(producto -> producto.getPrecio() > 220) ,
+                            counting()))
+
+                    .entrySet()
+                    .stream()
+                    .sorted(comparing( (Map.Entry<String, Long> stringLongEntry ) -> stringLongEntry.getValue() , reverseOrder() ))
+                    .toList();
+
+            listaNombre2.forEach(System.out::println);
+
+
+            record Mivector(String nomFab , long contProds){}
+
+            var listadonombre3 = listFabs.stream()
+                    .map(f -> new NomFabConteoPRods(
+                            f.getNombre(),
+                            f.getProductos()
+                                    .stream()
+                                    .filter(p-> p.getPrecio()>200)
+                                    .count())
+
+                    )
+                    .sorted(comparing())
+    }
 
 	/**
 	 * 43.Devuelve un listado con los nombres de los fabricantes donde la suma del precio de todos sus productos es superior a 1000 €
@@ -931,6 +991,18 @@ Hewlett-Packard              2
                 .reduce(0 , (a,b) -> a+b);
 
         System.out.println(sumatotal);
+
+    }
+
+    @Test
+    void testJoining(){
+        String hola = Stream.of("Hola" , "mundo")
+
+                        .collect(joining("," , ">" , "!"));
+
+        System.out.println(hola);
+
+
 
     }
 
