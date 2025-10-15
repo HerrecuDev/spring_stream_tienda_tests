@@ -777,8 +777,16 @@ Fabricante: Xiaomi
 	@Test
 	void test33() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var precio_mas_Barato = listProds.stream()
+                    .mapToDouble(p-> p.getPrecio())
+                    .min()
+                    .orElse(0.0);
+
+        System.out.println("El precio mas bajo es = " + precio_mas_Barato);
 	}
+
+
 
 	/**
 	 * 34. Calcula la suma de los precios de todos los productos.
@@ -786,7 +794,12 @@ Fabricante: Xiaomi
 	@Test
 	void test34() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var suma_Precios_Productos = listProds.stream()
+                    .mapToDouble(p-> p.getPrecio())
+                    .sum();
+
+        System.out.println("La suma de los precios de todos los productos = " + suma_Precios_Productos);
 	}
 
 	/**
@@ -795,7 +808,13 @@ Fabricante: Xiaomi
 	@Test
 	void test35() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var numero_Productos_Asus = listProds.stream()
+                    .filter( p -> p.getFabricante().getNombre().equals("Asus"))
+                    .map(p-> p.getNombre())
+                    .count();
+
+        System.out.println("El nuemro de productos que son del fabricante Asus es = " + numero_Productos_Asus);
 	}
 
 	/**
@@ -804,7 +823,15 @@ Fabricante: Xiaomi
 	@Test
 	void test36() {
 		var listProds = prodRepo.findAll();
-		//TODO
+
+            var media_precio_productos_Asus = listProds.stream()
+                    .filter(p-> p.getFabricante().getNombre().equals("Asus"))
+                    .mapToDouble(p-> p.getPrecio())
+                    .average()
+                            .orElse(0.0); //En caso de que no haya productos Asus.
+
+        System.out.println("La media del precio de los productos de ASus es = " + media_precio_productos_Asus);
+
 	}
 
 
@@ -886,7 +913,18 @@ Hewlett-Packard              2
 	@Test
 	void test38() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+      var lista_Con_cantidad_Productos = listFabs.stream()
+              .map(f -> String.format("%-15s , %14d%n" ,
+
+                      f.getNombre(),
+                      f.getProductos().size()))
+              .toList();
+
+        System.out.format("%-15s , %14s%n" , "Fabricante" , "#Productos");
+        System.out.println("-*".repeat(40));
+        lista_Con_cantidad_Productos.forEach(System.out::println);
+
 	}
 
 	/**
