@@ -559,49 +559,46 @@ Monitor 27 LED Full HD |199.25190000000003|Asus
 	@Test
 	void test27() {
 		var listProds = prodRepo.findAll();
-		    var listaCompletaEntabla = listProds.stream()
+        long maxlongNombre = listProds.stream().mapToLong(p-> p.getNombre().length()).max().orElse(0);
+
+
+        long maxlongPrecio  = listProds.stream().mapToLong(p -> BigDecimal.valueOf(p.getPrecio())
+                                                                                    .setScale(2,RoundingMode.HALF_UP )
+                                                                                    .toString()
+                                                                                    .length())
+                                                                                    .max().orElse(0);
+
+		    String listaCompletaEntabla = listProds.stream()
                     .filter(p -> p.getPrecio() >= 180)
-                    .sorted(Comparator
-                            .comparing(Producto :: getPrecio).reversed()
-                            .thenComparing(Producto::getNombre))
+                    .sorted(comparing((Producto p) -> p.getPrecio(),reverseOrder())
+                            .thenComparing((Producto p) -> p.getNombre()))
 
-                    .toList();
+                    .map(p-> p.getNombre()
+                           // + IntStream.rangeClosed(1 , (int)maxlongNombre - p.getNombre().length()).mapToObj(operand -> " ").collect(joining())
+                    + " ".repeat((int)maxlongNombre - p.getNombre().length())
+                    + "|"
+                            //Consejo Profesor redondear al alza con bigDecimal:
+                    + BigDecimal.valueOf(p.getPrecio())
+                                    .setScale(2 , RoundingMode.HALF_UP)
 
-            //Para calcular las longitudes maximas de cada columna:
-            int maxNombre = listaCompletaEntabla.stream()
-                    .mapToInt(p -> p.getNombre().length())
-                    .max().orElse(10);
+                            + " ".repeat((int)maxlongPrecio
+                                    - BigDecimal.valueOf(p.getPrecio())
+                                            .setScale(2,RoundingMode.HALF_UP)
+                                            .toString()
+                                            .length()
+                            )
+                    + "|" + p.getFabricante().getNombre()
 
-            int maxPrecio = listaCompletaEntabla.stream()
-                    .mapToInt( p-> String .format(".2f", p.getPrecio()).length())
-                    .max().orElse(6);
+                            //Une el Stream completo con lo siguiente
+                    ).collect(joining("\n"));
 
-            int maxFabricante = listaCompletaEntabla.stream()
-                    .mapToInt(p -> p.getFabricante().getNombre().length())
-                    .max().orElse(10);
-
-            //Encabezado :
-
-            String header = String.format(
-                    "%-" + maxNombre + "s | %" + maxPrecio + "s | %" + maxFabricante + "s" ,
-                    "PRODUCTO" , "PRECIO (€)" , "FABRICANTE"
-            );
-
-        System.out.println(header);
-        System.out.println("-".repeat(header.length()));
+        System.out.println(listaCompletaEntabla);
 
 
-        //Ahora para realiar las Filas:
-        listaCompletaEntabla.forEach( p-> {
-            String fila =  String.format(
-                    "%-" +maxNombre + "s | %" + maxPrecio + ".2f | %-" + maxFabricante + "s" ,
-                    p.getNombre(),
-                    p.getPrecio(),
-                    p.getFabricante().getNombre()
-            );
-            System.out.println(fila);
 
-        });
+
+
+
 
 
 	}
@@ -1039,7 +1036,26 @@ Hewlett-Packard              2
 	@Test
 	void test45() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+        record productoMAscaro(String producto , double Precio , String fabricante){}
+
+            var salida = listFabs.stream()
+                    .map(f -> {
+                        var optionalProdMax = f.getProductos().stream()
+                                .sorted(comparing(x-> x.getPrecio() ,reverseOrder()))
+                                .findFirst();
+
+                        if (optionalProdMax.isPresent()){
+                            return optionalProdMax.get().getNombre()+ " " + optionalProdMax.get().getPrecio() + " " + f.getNombre();
+
+                        }else{
+                            return f.getNombre() + "Sin productos";
+                        }
+
+
+
+                    }).collect(joining("\n"));
+
+        System.out.println(salida);
 	}
 
 	/**
@@ -1048,8 +1064,20 @@ Hewlett-Packard              2
 	 */
 	@Test
 	void test46() {
+
+        /*
 		var listFabs = fabRepo.findAll();
-		//TODO
+		    listFabs.stream().flatMap(fabricante -> fabricante.getProductos().stream())
+                    .mapToDouble(p -> p.getPrecio()).average()
+                    .orElse(0.0);
+
+            double mediaDetodosLosProductos = listFabs.stream().flatMap( f -> f.getProductos().stream()).map(p-> p.getPrecio())
+                                                                .reduce(0.0 , (a,b) -> a+b);
+
+            )
+
+            */
+
 	}
 
 
