@@ -1049,7 +1049,17 @@ Hewlett-Packard              2
 	@Test
 	void test43() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+            var sumaSuperior1000 = listFabs.stream()
+                    .filter(f -> f.getProductos()
+                            .stream()
+                            .mapToDouble(p -> p.getPrecio())
+                            .sum() > 1000)
+                    .map( f -> f.getNombre() + " es uno de los fabricantes que la suma de todos sus productos es superior a 1.000€")
+                    .toList();
+
+        sumaSuperior1000.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(1 , sumaSuperior1000.size());
 	}
 
 	/**
@@ -1059,7 +1069,7 @@ Hewlett-Packard              2
 	@Test
 	void test44() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
 	}
 
 	/**
