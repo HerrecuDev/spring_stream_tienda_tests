@@ -847,17 +847,17 @@ Fabricante: Xiaomi
 
         System.out.println(sumaryStadistics);
 
-        listProds.stream()
+        double [] estadisticas = listProds.stream()
                 .filter(producto -> producto.getFabricante().getNombre().equals("Crucial"))
                 .map(producto -> new double[]{0, (double) 0,(double)0 , producto.getPrecio()})
                 //Esta mal :
-                .reduce(new double[]{0.0 /*min*/ ,0.0 /*max*/,0.0 /*sum*/,0.0/*con*/ }, (a , b) ->{
+                .reduce(new double[]{0.0 /*min*/ ,0.0 /*max*/,0.0 /*sum*/,0.0/*count*/ }, (a , b) -> {
                     double minAct = 0.0;
                     double maxACt = 0.0;
                     double sumAct = 0.0;
                     double countAct = 0.0;
 
-                    double minAnterior = a[0];
+                    double minAnterior = (Double) a[0];
                     if ((Double) b[0] < minAnterior){
                         minAct = (Double)b[0];
 
@@ -885,6 +885,8 @@ Fabricante: Xiaomi
 
 
                 });
+
+        System.out.println(Arrays.toString(estadisticas));
 	}
 
 	/**
@@ -932,7 +934,18 @@ Hewlett-Packard              2
 	@Test
 	void test39() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+            var salida = listFabs.stream()
+                    .map(f -> f.getNombre() + " " +  f.getProductos()
+                            .stream()
+                            .mapToDouble( p -> p.getPrecio())
+                            .summaryStatistics())
+
+                    .toList();
+
+        salida.forEach(x -> System.out.println(x));
+        Assertions.assertEquals(9 , salida.size());
+
 	}
 
 	/**
@@ -942,7 +955,21 @@ Hewlett-Packard              2
 	@Test
 	void test40() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+            var salida = listFabs.stream()
+                    .filter( f -> f.getProductos()
+                                    .stream()
+                                    .mapToDouble(p-> p.getPrecio())
+                                    .average().orElse(0) >= 200)
+
+                    .map(f -> f.getCodigo() + " " + f.getProductos()
+                                            .stream()
+                                            .mapToDouble(p -> p.getPrecio())
+                                            .summaryStatistics())
+                    .toList();
+
+            salida.forEach(x -> System.out.println(x));
+            Assertions.assertEquals(3, salida.size());
 	}
 
 	/**
@@ -951,7 +978,14 @@ Hewlett-Packard              2
 	@Test
 	void test41() {
 		var listFabs = fabRepo.findAll();
-		//TODO
+
+            var listado = listFabs.stream()
+                    .filter( f-> f.getProductos().size() >= 2)
+                    .map(f -> f.getNombre() + " tiene " + f.getProductos().size() + " productos")
+                    .toList();
+
+            listado.forEach(x -> System.out.println(x));
+            Assertions.assertEquals(4 , listado.size());
 	}
 
 	/**
