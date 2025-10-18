@@ -84,8 +84,11 @@
 -- 40. Muestra el precio máximo, precio mínimo, precio medio y el número total de productos de los fabricantes que tienen un precio medio superior a 200€. No es necesario mostrar el nombre del fabricante, con el código del fabricante es suficiente.
     SELECT MAX(p.precio) as precio_Maximo,MIN(p.precio) as precio_Minimo, AVG(p.precio) as precio_Medio,COUNT(p.codigo) as total_Productos, f.codigo as codigo_Fabricante FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo  GROUP BY f.codigo HAVING AVG(p.precio) > 200;
 -- 41. Devuelve un listado con los nombres de los fabricantes que tienen 2 o más productos.
+    SELECT f.nombre as nombre_Fabricante , COUNT(p.codigo) as total_Productos FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo GROUP BY f.nombre HAVING total_Productos >= 2;
 -- 42. Devuelve un listado con los nombres de los fabricantes y el número de productos que tiene cada uno con un precio superior o igual a 220 €. Ordenado de mayor a menor número de productos.
+    SELECT f.nombre as nombre_Fabricante , COUNT(p.codigo) as cantidad_Producto FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE p.precio >= 220 GROUP BY nombre_Fabricante  ORDER BY cantidad_Producto DESC;
 -- 43. Devuelve un listado con los nombres de los fabricantes donde la suma del precio de todos sus productos es superior a 1000 €
+    SELECT f.nombre as nombre_Fabricante , SUM(p.precio) as suma_Precios FROM producto p JOIN fabricante f ON p.codigo_fabricante = f.codigo GROUP BY nombre_Fabricante HAVING (suma_Precios > 1000);
 -- 44. Devuelve un listado con los nombres de los fabricantes donde la suma del precio de todos sus productos es superior a 1000 €. Ordenado de menor a mayor por cuantía de precio de los productos.
 -- 45. Devuelve un listado con el nombre del producto más caro que tiene cada fabricante. El resultado debe tener tres columnas: nombre del producto, precio y nombre del fabricante. El resultado tiene que estar ordenado alfabéticamente de menor a mayor por el nombre del fabricante.
 -- 46. Devuelve un listado de todos los productos que tienen un precio mayor o igual a la media de todos los productos de su mismo fabricante. Se ordenará por fabricante en orden alfabético ascendente y los productos de cada fabricante tendrán que estar ordenados por precio descendente.
